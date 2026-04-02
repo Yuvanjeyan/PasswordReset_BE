@@ -5,6 +5,15 @@ const jwt = require("jsonwebtoken");
 const { generateResetToken } = require("../utils/generateToken");
 const { sendEmail } = require("../config/mail");
 
+const getClientBaseUrl = () => {
+  const rawUrl =
+    process.env.CLIENT_URL ||
+    process.env.FRONTEND_URL ||
+    "http://localhost:3000";
+
+  return rawUrl.replace(/\/+$/, "");
+};
+
 
 // LOGIN
 exports.login = async (req, res) => {
@@ -91,7 +100,7 @@ exports.forgotPassword = async (req, res) => {
 
     await user.save();
 
-    const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+    const resetUrl = `${getClientBaseUrl()}/reset-password/${resetToken}`;
 
     await sendEmail(
       user.email,
