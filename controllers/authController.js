@@ -112,7 +112,24 @@ exports.forgotPassword = async (req, res) => {
 
     res.json({ message: "Reset link sent to email" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("Forgot password error:", error);
+
+    if (req.body?.email) {
+      await User.updateOne(
+        { email: req.body.email },
+        {
+          $unset: {
+            resetPasswordToken: 1,
+            resetPasswordExpire: 1,
+          },
+        }
+      );
+    }
+
+    res.status(500).json({
+      message: "Unable to send reset email",
+      error: error.message,
+    });
   }
 };
 

@@ -1,6 +1,10 @@
 const nodemailer = require("nodemailer");
 
 exports.sendEmail = async (to, subject, html) => {
+  if (!process.env.EMAIL || !process.env.PASSWORD) {
+    throw new Error("Email service is not configured. Set EMAIL and PASSWORD.");
+  }
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -8,6 +12,8 @@ exports.sendEmail = async (to, subject, html) => {
       pass: process.env.PASSWORD,
     },
   });
+
+  await transporter.verify();
 
   await transporter.sendMail({
     from: process.env.EMAIL,
