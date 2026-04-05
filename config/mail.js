@@ -9,7 +9,7 @@ exports.sendEmail = async (to, subject, html) => {
 
   if (!process.env.FROM_EMAIL) {
     throw new Error(
-      "SendGrid sender email is not configured. Set FROM_EMAIL to your verified SendGrid sender."
+      "SendGrid sender email is not configured."
     );
   }
 
